@@ -291,6 +291,7 @@ function wrap(context::WrapContext, buf::IO, sd::StructDecl; usename = "")
     ccl = children(sd)
     if (length(ccl) < 1)
         warn("Skipping empty struct: \"$usename\"")
+        println(buf, "Skipping empty struct: \"$usename\"")
         return
     end
 
@@ -324,7 +325,7 @@ end
 
 function wrap(context::WrapContext, buf::IO, ud::UnionDecl; usename = "")
     if (usename == "" && (usename = name(ud)) == "")
-        warn("Skipping unnamed StructDecl")
+        warn("Skipping unnamed UnionDecl")
         return
     end
     
@@ -475,7 +476,7 @@ function wrap(context::WrapContext, strm::IO, md::cindex.MacroDefinition)
         (exprn,pos) = lex_exprn(tokens, 2)
     end
     exprn = replace(exprn, "\$", "\\\$")
-    print(strm, "const " * string(tokens[1].text) * " = " * exprn * "\n")
+    println(strm, "const " * string(tokens[1].text) * " = " * exprn)
 end
 
 function wrap(context::WrapContext, buf::IO, cursor::TypeRef; usename="")
